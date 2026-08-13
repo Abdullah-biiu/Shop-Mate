@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "postinstall": "npm --prefix server install && npm --prefix frontend install",
+    "dev": "npm --prefix server run dev",
     "start": "npm --prefix server start",
     "build": "npm --prefix frontend run build"
   }
