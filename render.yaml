@@ -1,0 +1,55 @@
+services:
+  - type: web
+    name: shopmate-backend
+    env: node
+    root: server
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: PORT
+        value: "4000"
+      - key: NODE_ENV
+        value: production
+      - key: FRONTEND_URL
+        value: https://shopmate-frontend.onrender.com
+      - key: DASHBOARD_URL
+        value: https://shopmate-frontend.onrender.com
+      - key: VITE_API_URL
+        value: https://shopmate-backend.onrender.com/api/v1
+      - key: DB_HOST
+        fromDatabase:
+          name: shopmate-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: shopmate-db
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: shopmate-db
+          property: database
+      - key: DB_USER
+        fromDatabase:
+          name: shopmate-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: shopmate-db
+          property: password
+
+  - type: static_site
+    name: shopmate-frontend
+    root: frontend
+    plan: free
+    buildCommand: npm install && npm run build
+    publishPath: dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://shopmate-backend.onrender.com/api/v1
+
+databases:
+  - name: shopmate-db
+    plan: starter
+    databaseName: shopmate
+    region: oregon
