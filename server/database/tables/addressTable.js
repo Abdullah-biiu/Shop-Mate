@@ -35,6 +35,6 @@ export async function createAddressesTable() {
     console.log("✅ Addresses table created.");
   } catch (error) {
     console.error("❌ Failed to create addresses table:", error);
-    process.exit(1);
+    throw error;
   }
 }
