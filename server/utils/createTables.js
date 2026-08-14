@@ -3,7 +3,7 @@ import { createProductsTable } from "../models/productTable.js";
 import { createProductReviewsTable } from "../models/productReviewsTable.js";
 import { createOrdersTable } from "../models/ordersTable.js";
 import { createOrderItemTable } from "../models/orderItemsTable.js";
-import { createShippingInfoTable } from "../models/shippingInfoTable.js";
+import { createShippingInfoTable } from "../models/shippinginfoTable.js";
 import { createPaymentsTable } from "../models/paymentsTable.js";
 import { createAddressesTable } from "../database/tables/addressTable.js"; // <-- ADD THIS
 
