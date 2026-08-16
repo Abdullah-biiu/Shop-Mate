@@ -19,21 +19,11 @@ import {
 const router = express.Router();
 
 // ============================
-// CORS Preflight
-// ============================
-
-router.options("*", (req, res) => {
-  res.sendStatus(204);
-});
-
-// ============================
 // PUBLIC PRODUCT ROUTES
 // ============================
 
 // Get all products
 // GET /api/v1/product
-// Example:
-// /api/v1/product?price=0-10000&page=1
 router.get("/", fetchAllProducts);
 
 // Get single product
