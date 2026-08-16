@@ -1,4 +1,5 @@
 import express from "express";
+
 import {
   createProduct,
   fetchAllProducts,
@@ -9,6 +10,7 @@ import {
   deleteReview,
   fetchAIFilteredProducts,
 } from "../controllers/productController.js";
+
 import {
   authorizedRoles,
   isAuthenticated,
@@ -16,28 +18,82 @@ import {
 
 const router = express.Router();
 
+// ============================
+// CORS Preflight
+// ============================
+
+router.options("*", (req, res) => {
+  res.sendStatus(204);
+});
+
+// ============================
+// PUBLIC PRODUCT ROUTES
+// ============================
+
+// Get all products
+// GET /api/v1/product
+// Example:
+// /api/v1/product?price=0-10000&page=1
+router.get("/", fetchAllProducts);
+
+// Get single product
+// GET /api/v1/product/singleProduct/:productId
+router.get("/singleProduct/:productId", fetchSingleProduct);
+
+// ============================
+// REVIEW ROUTES
+// ============================
+
+// Post product review
+router.put(
+  "/post-new/review/:productId",
+  isAuthenticated,
+  postProductReview
+);
+
+// Delete product review
+router.delete(
+  "/delete/review/:productId",
+  isAuthenticated,
+  deleteReview
+);
+
+// ============================
+// ADMIN PRODUCT ROUTES
+// ============================
+
+// Create product
 router.post(
   "/admin/create",
   isAuthenticated,
   authorizedRoles("Admin"),
   createProduct
 );
-router.get("/", fetchAllProducts);
-router.get("/singleProduct/:productId", fetchSingleProduct);
-router.put("/post-new/review/:productId", isAuthenticated, postProductReview);
-router.delete("/delete/review/:productId", isAuthenticated, deleteReview);
+
+// Update product
 router.put(
   "/admin/update/:productId",
   isAuthenticated,
   authorizedRoles("Admin"),
   updateProduct
 );
+
+// Delete product
 router.delete(
   "/admin/delete/:productId",
   isAuthenticated,
   authorizedRoles("Admin"),
   deleteProduct
 );
-router.post("/ai-search", isAuthenticated, fetchAIFilteredProducts);
+
+// ============================
+// AI PRODUCT SEARCH
+// ============================
+
+router.post(
+  "/ai-search",
+  isAuthenticated,
+  fetchAIFilteredProducts
+);
 
 export default router;
