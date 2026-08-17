@@ -8,18 +8,20 @@ export const isAuthenticated = catchAsyncErrors(
     let token = null;
 
     // ============================
-    // Check Authorization Header
+    // 1. Check Authorization Header
     // ============================
 
+    const authHeader = req.headers.authorization;
+
     if (
-      req.headers.authorization &&
-      req.headers.authorization.startsWith("Bearer ")
+      authHeader &&
+      authHeader.startsWith("Bearer ")
     ) {
-      token = req.headers.authorization.split(" ")[1];
+      token = authHeader.split(" ")[1];
     }
 
     // ============================
-    // Check Cookie
+    // 2. Check Cookie
     // ============================
 
     if (!token && req.cookies?.token) {
@@ -27,7 +29,7 @@ export const isAuthenticated = catchAsyncErrors(
     }
 
     // ============================
-    // No Token
+    // 3. No Token
     // ============================
 
     if (!token) {
@@ -40,7 +42,7 @@ export const isAuthenticated = catchAsyncErrors(
     }
 
     // ============================
-    // Verify Token
+    // 4. Verify JWT
     // ============================
 
     let decoded;
@@ -51,6 +53,8 @@ export const isAuthenticated = catchAsyncErrors(
         process.env.JWT_SECRET_KEY
       );
     } catch (error) {
+      console.log("JWT verification failed:", error.message);
+
       return next(
         new ErrorHandler(
           "Invalid or expired token.",
@@ -60,7 +64,7 @@ export const isAuthenticated = catchAsyncErrors(
     }
 
     // ============================
-    // Find User
+    // 5. Find User
     // ============================
 
     const user = await database.query(
@@ -68,7 +72,7 @@ export const isAuthenticated = catchAsyncErrors(
       [decoded.id]
     );
 
-    if (!user.rows.length) {
+    if (user.rows.length === 0) {
       return next(
         new ErrorHandler(
           "User no longer exists.",
